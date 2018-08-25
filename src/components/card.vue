@@ -2,15 +2,17 @@
   <div class="flipper-wrap" :class="{ 'flipper-wrap--reversed': card.reversed }">
     <div class="flipper">
 
-      <div class="card card__front" :class="{ 'card--selected': card.selected }">
+      <div
+        class="card card__front"
+        :class="{ 'card--selected': card.selected, 'card--empty': card.empty }">
         <span class="name name--up">
           {{ name }}
-          <img class="symbol symbol--small" :src="`/images/${ color }.svg`">
+          <img v-if="!card.empty" class="symbol symbol--small" :src="`/images/${ color }.svg`">
         </span>
-        <img class="symbol" :src="`/images/${ color }.svg`">
+        <img v-if="!card.empty" class="symbol" :src="`/images/${ color }.svg`">
         <span class="name name--down">
           {{ name }}
-          <img class="symbol symbol--small" :src="`/images/${ color }.svg`">
+          <img v-if="!card.empty" class="symbol symbol--small" :src="`/images/${ color }.svg`">
         </span>
       </div>
 
@@ -57,6 +59,7 @@ export default {
       margin: -13px 5px;
     }
   }
+
   .card {
     backface-visibility: hidden;
     position: absolute;
@@ -91,6 +94,11 @@ export default {
 
     &--selected {
       border-color: #b70000;
+    }
+
+    &--empty{
+      border:none;
+      cursor: default;
     }
   }
   .symbol {

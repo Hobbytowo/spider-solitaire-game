@@ -44,6 +44,7 @@ export default {
         reversed: true,
         stack: -1,
         selected: false,
+        empty: false,
         toString () {
           const names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
           return `${ names[this.value] } ${ this.color } - Stack: ${ this.stack }`
@@ -113,15 +114,36 @@ export default {
         return stack.some(card => card.selected)
       })
 
-      if (isAnyCardSelected) {
+      if (!isAnyCardSelected && card.empty) {
+        return
+      }
+
+      if (!isAnyCardSelected) {
+
+          const currentStack = this.stacks[card.stack]
+          const cardIndex = currentStack.findIndex(cardInStack => {
+            return cardInStack.id === card.id
+          })
+          const cardsOnTop = currentStack.slice(cardIndex)
+          const isCardsSelectCorrect = this.checkCardsToMove(cardsOnTop)
+
+          if (isCardsSelectCorrect) {
+            cardsOnTop.forEach(card => card.selected = true)
+            this.selectedCards.push(...cardsOnTop)
+          } else {
+            this.deselectCards()
+          }
+
+      } else { // If there is selected card
+
         // Diselect card if click on earlier selected card
         if (card.selected) {
           this.deselectCards()
           return
         }
 
-        // Check if move on selected card is possible
-        if (card.value - 1 !== this.selectedCards[0].value) {
+        // Return if move on selected card is incorrect
+        if (card.value - 1 !== this.selectedCards[0].value && !card.empty) {
           return
         }
 
@@ -132,33 +154,29 @@ export default {
           return cardInStack.id === this.selectedCards[0].id
         })
 
+        // Remove emptyCard if it was exist
+        if (stackTo[0].value === null) {
+          stackTo.pop()
+        }
+
         const movingCards = stackFrom.splice(indexFrom)
         movingCards.forEach(movingCard => movingCard.stack = card.stack)
         stackTo.push(...movingCards)
 
         this.deselectCards()
-        // Reverse last card in the stock
+
+        // Reverse last card in the stack
         if (stackFrom.length > 0) {
           stackFrom[stackFrom.length - 1].reversed = false
         }
-
-      } else { // If there is no selected card
-
-        const currentStack = this.stacks[card.stack]
-
-        const cardIndex = currentStack.findIndex(cardInStack => {
-          return cardInStack.id === card.id
-        })
-
-        const cardsOnTop = currentStack.slice(cardIndex)
-
-        const isCardsSelectCorrect = this.checkCardsToMove(cardsOnTop)
-
-        if (isCardsSelectCorrect) {
-          cardsOnTop.forEach(card => card.selected = true)
-          this.selectedCards.push(...cardsOnTop)
-        } else {
-          this.deselectCards()
+        // Create empty card if moved card was the last one in the stack
+        else {
+          const emptyCard = JSON.parse(JSON.stringify(movingCards[0]))
+          emptyCard.value = null
+          emptyCard.color = null
+          emptyCard.empty = true
+          emptyCard.stack = this.stacks.indexOf(stackFrom)
+          stackFrom.push(emptyCard)
         }
 
       }
