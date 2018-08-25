@@ -31,7 +31,7 @@ export default {
       stacks: Array(10).fill().map(() => []),
       cards: [],
       colors: [CLUB, DIAMOND, SPADE, HEART],
-      selectedCard: null
+      selectedCards: []
     }
   },
   created () {
@@ -83,7 +83,7 @@ export default {
           card.selected = false
         })
       })
-      this.selectedCard = null
+      this.selectedCards = []
     },
     checkCardsToMove (cards) {
       if (cards.length === 1) {
@@ -112,22 +112,27 @@ export default {
       const isAnyCardSelected = this.stacks.some(stack => {
         return stack.some(card => card.selected)
       })
+
       if (isAnyCardSelected) {
-        // Diselect card
+        // Diselect card if click on earlier selected card
         if (card.selected) {
           this.deselectCards()
           return
         }
 
-        if (card.value - 1 !== this.selectedCard.value) {
+        // Check if move on selected card is possible
+        if (card.value - 1 !== this.selectedCards[0].value) {
           return
         }
 
-        // Move card
-        const stackFrom = this.stacks[this.selectedCard.stack]
+        // Move cards
+        const stackFrom = this.stacks[this.selectedCards[0].stack]
         const stackTo = this.stacks[card.stack]
+        const indexFrom = stackFrom.findIndex(cardInStack => {
+          return cardInStack.id === this.selectedCards[0].id
+        })
 
-        const movingCards = [stackFrom.pop()]
+        const movingCards = stackFrom.splice(indexFrom)
         movingCards.forEach(movingCard => movingCard.stack = card.stack)
         stackTo.push(...movingCards)
 
@@ -138,9 +143,6 @@ export default {
         }
 
       } else { // If there is no selected card
-
-        this.selectedCard = card
-        card.selected = true
 
         const currentStack = this.stacks[card.stack]
 
@@ -154,6 +156,7 @@ export default {
 
         if (isCardsSelectCorrect) {
           cardsOnTop.forEach(card => card.selected = true)
+          this.selectedCards.push(...cardsOnTop)
         } else {
           this.deselectCards()
         }
