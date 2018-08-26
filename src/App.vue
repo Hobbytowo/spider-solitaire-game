@@ -51,7 +51,7 @@ export default {
       colors: [CLUB, DIAMOND, SPADE, HEART],
       selectedCards: [],
       levelOptions: [1, 2, 4],
-      levelSelected: '2',
+      levelSelected: '1',
       fullColor: 0
     }
   },
@@ -115,12 +115,14 @@ export default {
       })
       this.selectedCards = []
     },
+
     createEmptyCard (stack) {
       stack.push({
         stack: this.stacks.indexOf(stack),
         empty: true
       })
     },
+
     checkCardsToMove (cards) {
       if (cards.length === 1) {
         return true
@@ -139,6 +141,8 @@ export default {
 
       return areColorsCorrect && areVlauesCorrect
     },
+
+    // Check if cards on stack creating full color in correct order
     checkFullColor (stack) {
       let stackLength = 0
       const currentStackValues = []
@@ -179,6 +183,7 @@ export default {
 
         }
       }
+
 
     },
     // Select card
@@ -259,6 +264,16 @@ export default {
       if (this.cards.length === 0) {
         return
       }
+
+      const isEmptyCard = this.stacks.some(stack => stack[0].empty)
+      const stacks = document.querySelector('.stacks')
+
+      if (isEmptyCard) {
+        stacks.classList.add('addCardsValidation')
+        return
+      }
+
+      stacks.classList.remove('addCardsValidation')
       this.stacks.forEach((stack, idx) => {
         const card = this.cards.pop()
         card.stack = idx
@@ -286,13 +301,14 @@ export default {
   .stacks {
     display: flex;
     justify-content: center;
+    position: relative;
   }
 
   .menu{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 
     &__item{
       background-color: #b70000;
@@ -314,7 +330,14 @@ export default {
     &__select{
       margin-left: 5px;
     }
+  }
 
+  .addCardsValidation::before{
+    content: 'Before add new cards, every stack has to be filled';
+    color: red;
+    position: absolute;
+    top: -40px;
+    left: 40%;
   }
 
 
