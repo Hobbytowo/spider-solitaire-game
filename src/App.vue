@@ -1,13 +1,17 @@
 <template>
   <div class="container">
+
     <h1 class="title">Spider Solitaire</h1>
+
     <section class="menu">
       <button @click="addCards" class="menu__item menu--button" type="button">
         Add cards ({{ cards.length / 10 }})
       </button>
+
       <div class="menu__item menu--score">
         Full colors: {{ fullColor }} / 8
       </div>
+
       <div class="menu__item menu--level level">
         <label class="menu__label">Number of colors</label>
         <select class="menu__select" v-model="levelSelected">
@@ -21,6 +25,7 @@
         </select>
       </div>
     </section>
+
     <div class="stacks">
       <stack-component
         v-for="(stack, i) in stacks"
@@ -29,6 +34,13 @@
         @onCardSelect="onCardSelect"
       />
     </div>
+    <button id="show-modal" @click="showModalWin = true">Show Modal</button>
+
+    <modalWin-component
+      v-if="showModalWin"
+      @close="showModalWin = false"
+      @newGame="clearData(); createCards()"
+    />
   </div>
 </template>
 
@@ -36,12 +48,14 @@
 import _ from 'lodash'
 import cardComponent from '@/components/card'
 import stackComponent from '@/components/stack'
+import modalWinComponent from '@/components/modalWin'
 import { CLUB, DIAMOND, SPADE, HEART } from '@/cardTypes'
 
 export default {
   components: {
     cardComponent,
-    stackComponent
+    stackComponent,
+    modalWinComponent
   },
 
   data () {
@@ -52,7 +66,8 @@ export default {
       selectedCards: [],
       levelOptions: [1, 2, 4],
       levelSelected: '1',
-      fullColor: 0
+      fullColor: 0,
+      showModalWin: false
     }
   },
   created () {
@@ -79,7 +94,7 @@ export default {
       this.cards = _.shuffle(this.cards)
 
       // Create stacks
-      for(let stackNumber = 0; stackNumber < 4; stackNumber++){
+      for (let stackNumber = 0; stackNumber < 4; stackNumber++) {
         for (let i = 0; i < 6; i++) {
           const card = this.cards.pop()
           card.stack = stackNumber
@@ -105,6 +120,7 @@ export default {
     clearData () {
       this.stacks = Array(10).fill().map(() => [])
       this.cards = []
+      this.fullColor = 0
     },
 
     deselectCards () {
@@ -180,6 +196,7 @@ export default {
           }
 
           this.fullColor++
+          this.checkWin()
 
         }
       }
@@ -274,12 +291,21 @@ export default {
       }
 
       stacks.classList.remove('addCardsValidation')
+
       this.stacks.forEach((stack, idx) => {
         const card = this.cards.pop()
         card.stack = idx
         card.reversed = false
         stack.push(card)
+
+        this.checkFullColor(stack)
       })
+    },
+
+    checkWin () {
+      if (this.fullColor === 8) {
+        this.showModalWin = true
+      }
     }
   }
 }
