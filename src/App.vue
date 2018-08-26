@@ -5,11 +5,11 @@
 
     <section class="menu">
       <button @click="addCards" class="menu__item menu--button" type="button">
-        Add cards ({{ cards.length / 10 }})
+        Add cards ({{ cards.length / stacks.length }})
       </button>
 
       <div class="menu__item menu--score">
-        Full colors: {{ fullColor }} / 8
+        Full colors: {{ fullColor }} / {{ nrOfFoundation }}
       </div>
 
       <div class="menu__item menu--level level">
@@ -67,6 +67,8 @@ export default {
       levelOptions: [1, 2, 4],
       levelSelected: '1',
       fullColor: 0,
+      nrOfFoundation: 8,
+      nrOfCardsInColor: 13,
       showModalWin: false
     }
   },
@@ -76,10 +78,10 @@ export default {
 
   methods: {
     createCards () {
-      for (let i = 0; i < 13 * 8; i++) {
+      for (let i = 0; i < this.nrOfCardsInColor * this.nrOfFoundation; i++) {
         this.cards.push({
           id: i,
-          value: i % 13,
+          value: i % this.nrOfCardsInColor,
           color: this.colors[i % this.levelSelected],
           reversed: true,
           stack: -1,
@@ -102,7 +104,7 @@ export default {
         }
       }
 
-      for (let stackNumber = 4; stackNumber < 10; stackNumber++) {
+      for (let stackNumber = 4; stackNumber < this.stacks.length; stackNumber++) {
         for (let i = 0; i < 5; i++) {
           const card = this.cards.pop()
           card.stack = stackNumber
@@ -162,7 +164,6 @@ export default {
     checkFullColor (stack) {
       let stackLength = 0
       const currentStackValues = []
-      const fullColorLength = 13
 
       stack.forEach(card => {
         if (!card.reversed) {
@@ -171,13 +172,13 @@ export default {
         }
       })
 
-      if (stackLength < fullColorLength) { // Not enough cards
+      if (stackLength < this.nrOfCardsInColor) { // Not enough cards
         return
       } else {
         let correct = 0
 
         // Check if cards are in good order
-        for (let i = stackLength - 1; i > stackLength - 13; i--) {
+        for (let i = stackLength - 1; i > stackLength - this.nrOfCardsInColor; i--) {
           if (currentStackValues[i] + 1 === currentStackValues[i - 1]) {
             correct++
           } else {
@@ -185,8 +186,8 @@ export default {
           }
         }
 
-        if (correct === 12) { // Cards in good order
-          stack.splice(-13)
+        if (correct === this.nrOfCardsInColor - 1) { // Cards in good order
+          stack.splice(- this.nrOfCardsInColor)
 
           if (stack.length === 0) {
             this.createEmptyCard (stack)
@@ -303,7 +304,7 @@ export default {
     },
 
     checkWin () {
-      if (this.fullColor === 8) {
+      if (this.fullColor === this.nrOfFoundation) {
         this.showModalWin = true
       }
     }
