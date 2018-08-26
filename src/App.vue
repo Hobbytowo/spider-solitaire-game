@@ -34,8 +34,7 @@
         @onCardSelect="onCardSelect"
       />
     </div>
-    <button id="show-modal" @click="showModalWin = true">Show Modal</button>
-
+    
     <modalWin-component
       v-if="showModalWin"
       @close="showModalWin = false"
@@ -164,44 +163,51 @@ export default {
     checkFullColor (stack) {
       let stackLength = 0
       const currentStackValues = []
+      const currentStackColors = []
 
       stack.forEach(card => {
         if (!card.reversed) {
           stackLength++
           currentStackValues.push(card.value)
+          currentStackColors.push(card.color)
         }
       })
 
-      if (stackLength < this.nrOfCardsInColor) { // Not enough cards
+      if (stackLength < this.nrOfCardsInColor) {
         return
-      } else {
-        let correct = 0
+      }
 
-        // Check if cards are in good order
-        for (let i = stackLength - 1; i > stackLength - this.nrOfCardsInColor; i--) {
-          if (currentStackValues[i] + 1 === currentStackValues[i - 1]) {
-            correct++
-          } else {
-            return
-          }
+      let correctValues = 0
+
+      // Check if cards are in good order
+      for (let i = stackLength - 1; i > stackLength - this.nrOfCardsInColor; i--) {
+        // Check values
+        if (currentStackValues[i] + 1 === currentStackValues[i - 1]) {
+          correctValues++
+        } else {
+          return
         }
 
-        if (correct === this.nrOfCardsInColor - 1) { // Cards in good order
-          stack.splice(- this.nrOfCardsInColor)
-
-          if (stack.length === 0) {
-            this.createEmptyCard (stack)
-          }
-          else if (stack[stack.length - 1].reversed === true) {
-            stack[stack.length - 1].reversed = false
-          }
-
-          this.fullColor++
-          this.checkWin()
-
+        // Check colors
+        if (currentStackColors[i] !== currentStackColors[i - 1]){
+          return
         }
       }
 
+      if (correctValues === this.nrOfCardsInColor - 1) { // Cards in good order
+        stack.splice(- this.nrOfCardsInColor)
+        if (stack.length === 0) {
+          this.createEmptyCard (stack)
+        }
+
+        else if (stack[stack.length - 1].reversed === true) {
+          stack[stack.length - 1].reversed = false
+        }
+
+        this.fullColor++
+        this.checkWin()
+
+        }
 
     },
     // Select card
