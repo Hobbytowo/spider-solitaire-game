@@ -1,9 +1,14 @@
 <template>
   <div class="container">
     <h1 class="title">Spider Solitaire</h1>
-    <button @click="addCards" class="button" type="button">
-      Add cards ({{ cards.length / 10 }})
-    </button>
+    <section class="menu">
+      <button @click="addCards" class="menu__button" type="button">
+        Add cards ({{ cards.length / 10 }})
+      </button>
+      <div class="menu__score">
+        Full colors: {{ fullColor }} / 8
+      </div>
+    </section>
     <div class="stacks">
       <stack-component
         v-for="(stack, i) in stacks"
@@ -31,7 +36,8 @@ export default {
       stacks: Array(10).fill().map(() => []),
       cards: [],
       colors: [CLUB, DIAMOND, SPADE, HEART],
-      selectedCards: []
+      selectedCards: [],
+      fullColor: 0
     }
   },
   created () {
@@ -146,7 +152,7 @@ export default {
             stack[stack.length - 1].reversed = false
           }
 
-          // create uzbierane Colori
+          this.fullColor++
 
         }
       }
@@ -256,21 +262,37 @@ export default {
 
   .stacks {
     display: flex;
+    justify-content: center;
   }
 
-  .button {
-    width: 150px;
-    height: 30px;
-    background-color: #b70000;
-    border-radius: 5px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 30px;
-    &:hover {
-      background-color: #444;
+  .menu{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+
+    &__button {
+      width: 150px;
+      background-color: #b70000;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 10px;
+      &:hover {
+        background-color: #444;
+      }
+    }
+
+    &__score{
+      background-color: #b70000;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      padding: 10px;
     }
   }
+
 
 </style>
