@@ -2,11 +2,23 @@
   <div class="container">
     <h1 class="title">Spider Solitaire</h1>
     <section class="menu">
-      <button @click="addCards" class="menu__button" type="button">
+      <button @click="addCards" class="menu__item menu--button" type="button">
         Add cards ({{ cards.length / 10 }})
       </button>
-      <div class="menu__score">
+      <div class="menu__item menu--score">
         Full colors: {{ fullColor }} / 8
+      </div>
+      <div class="menu__item menu--level level">
+        <label class="menu__label">Number of colors</label>
+        <select class="menu__select" v-model="levelSelected">
+          <option
+          v-for="nr in levelOptions"
+          :value="nr"
+          class="menu__option"
+          @click="clearData(); createCards()">
+            {{ nr }}
+          </option>
+        </select>
       </div>
     </section>
     <div class="stacks">
@@ -31,59 +43,70 @@ export default {
     cardComponent,
     stackComponent
   },
+
   data () {
     return {
       stacks: Array(10).fill().map(() => []),
       cards: [],
       colors: [CLUB, DIAMOND, SPADE, HEART],
       selectedCards: [],
+      levelOptions: [1, 2, 4],
+      levelSelected: '2',
       fullColor: 0
     }
   },
   created () {
-    // Create cards
-    for (let i = 0; i < 13 * 8; i++) {
-      this.cards.push({
-        id: i,
-        value: i % 13,
-        color: this.colors[i % 4],
-        reversed: true,
-        stack: -1,
-        selected: false,
-        empty: false,
-        toString () {
-          const names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-          return `${ names[this.value] } ${ this.color } - Stack: ${ this.stack }`
-        }
-      })
-    }
-    this.cards = _.shuffle(this.cards)
-
-    // Create stacks
-    for(let stackNumber = 0; stackNumber < 4; stackNumber++){
-      for (let i = 0; i < 6; i++) {
-        const card = this.cards.pop()
-        card.stack = stackNumber
-        this.stacks[stackNumber].push(card)
-      }
-    }
-
-    for (let stackNumber = 4; stackNumber < 10; stackNumber++) {
-      for (let i = 0; i < 5; i++) {
-        const card = this.cards.pop()
-        card.stack = stackNumber
-        this.stacks[stackNumber].push(card)
-      }
-    }
-
-    // Reverse last card in stack
-    this.stacks.forEach(stack => {
-      const lastIndex = stack.length - 1
-      stack[lastIndex].reversed = false
-    })
+    this.createCards()
   },
 
   methods: {
+    createCards () {
+      for (let i = 0; i < 13 * 8; i++) {
+        this.cards.push({
+          id: i,
+          value: i % 13,
+          color: this.colors[i % this.levelSelected],
+          reversed: true,
+          stack: -1,
+          selected: false,
+          empty: false,
+          toString () {
+            const names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+            return `${ names[this.value] } ${ this.color } - Stack: ${ this.stack }`
+          }
+        })
+      }
+      this.cards = _.shuffle(this.cards)
+
+      // Create stacks
+      for(let stackNumber = 0; stackNumber < 4; stackNumber++){
+        for (let i = 0; i < 6; i++) {
+          const card = this.cards.pop()
+          card.stack = stackNumber
+          this.stacks[stackNumber].push(card)
+        }
+      }
+
+      for (let stackNumber = 4; stackNumber < 10; stackNumber++) {
+        for (let i = 0; i < 5; i++) {
+          const card = this.cards.pop()
+          card.stack = stackNumber
+          this.stacks[stackNumber].push(card)
+        }
+      }
+
+      // Reverse last card in stack
+      this.stacks.forEach(stack => {
+        const lastIndex = stack.length - 1
+        stack[lastIndex].reversed = false
+      })
+    },
+
+    clearData () {
+      this.stacks = Array(10).fill().map(() => [])
+      this.cards = []
+    },
+
     deselectCards () {
       this.stacks.forEach(stack => {
         stack.forEach(card => {
@@ -267,31 +290,31 @@ export default {
 
   .menu{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
-    &__button {
-      width: 150px;
+    &__item{
       background-color: #b70000;
       border-radius: 5px;
-      border: none;
       color: white;
+      padding: 10px;
+    }
+
+    &--button {
+      width: 150px;
+      border: none;
       cursor: pointer;
       transition: all 0.2s;
-      padding: 10px;
       &:hover {
         background-color: #444;
       }
     }
 
-    &__score{
-      background-color: #b70000;
-      border-radius: 5px;
-      border: none;
-      color: white;
-      padding: 10px;
+    &__select{
+      margin-left: 5px;
     }
+
   }
 
 
