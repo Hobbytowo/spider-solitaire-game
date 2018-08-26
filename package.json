@@ -1,7 +1,9 @@
 {
-  "name": "Spider Solitaire Game",
+  "name": "spider-solitaire-game",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://hobbytowo-spider-solitaire-game.netlify.com/",
+  "main": "App.vue",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -40,5 +42,7 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "author": "Weronika Kędziora <wkedziora13@gmail.com>",
+  "license": "MIT"
 }
