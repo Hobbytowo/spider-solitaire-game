@@ -97,8 +97,7 @@ export default {
     }
 
     &--empty{
-      border:none;
-      cursor: default;
+      background-color: #eee;
     }
   }
   .symbol {

@@ -86,6 +86,12 @@ export default {
       })
       this.selectedCards = []
     },
+    createEmptyCard (stack) {
+      stack.push({
+        stack: this.stacks.indexOf(stack),
+        empty: true
+      })
+    },
     checkCardsToMove (cards) {
       if (cards.length === 1) {
         return true
@@ -103,6 +109,48 @@ export default {
       })
 
       return areColorsCorrect && areVlauesCorrect
+    },
+    checkFullColor (stack) {
+      let stackLength = 0
+      const currentStackValues = []
+      const fullColorLength = 13
+
+      stack.forEach(card => {
+        if (!card.reversed) {
+          stackLength++
+          currentStackValues.push(card.value)
+        }
+      })
+
+      if (stackLength < fullColorLength) { // Not enough cards
+        return
+      } else {
+        let correct = 0
+
+        // Check if cards are in good order
+        for (let i = stackLength - 1; i > stackLength - 13; i--) {
+          if (currentStackValues[i] + 1 === currentStackValues[i - 1]) {
+            correct++
+          } else {
+            return
+          }
+        }
+
+        if (correct === 12) { // Cards in good order
+          stack.splice(-13)
+
+          if (stack.length === 0) {
+            this.createEmptyCard (stack)
+          }
+          else if (stack[stack.length - 1].reversed === true) {
+            stack[stack.length - 1].reversed = false
+          }
+
+          // create uzbierane Colori
+
+        }
+      }
+
     },
     // Select card
     onCardSelect (card) {
@@ -155,7 +203,7 @@ export default {
         })
 
         // Remove emptyCard if it was exist
-        if (stackTo[0].value === null) {
+        if (stackTo[0].empty === true) {
           stackTo.pop()
         }
 
@@ -163,20 +211,16 @@ export default {
         movingCards.forEach(movingCard => movingCard.stack = card.stack)
         stackTo.push(...movingCards)
 
+        this.checkFullColor(stackTo)
+
         this.deselectCards()
 
         // Reverse last card in the stack
         if (stackFrom.length > 0) {
           stackFrom[stackFrom.length - 1].reversed = false
         }
-        // Create empty card if moved card was the last one in the stack
-        else {
-          const emptyCard = JSON.parse(JSON.stringify(movingCards[0]))
-          emptyCard.value = null
-          emptyCard.color = null
-          emptyCard.empty = true
-          emptyCard.stack = this.stacks.indexOf(stackFrom)
-          stackFrom.push(emptyCard)
+        else { // if moved card was the last one on the stack
+          this.createEmptyCard(stackFrom)
         }
 
       }
@@ -228,4 +272,5 @@ export default {
       background-color: #444;
     }
   }
+
 </style>
