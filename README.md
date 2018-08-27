@@ -7,9 +7,9 @@ Here is a working live: https://hobbytowo-spider-solitaire-game.netlify.com/
 Standard Windows "Spider Solitaire" game build with Vue.js.
 
 ## Built with
-- [Vue.js 2.5] (https://vuejs.org/)
-- [Lodash 4.17] (https://lodash.com/)
-- [SASS] (https://sass-lang.com/)
+- [Vue.js 2.5](https://vuejs.org/)
+- [Lodash 4.17](https://lodash.com/)
+- [SASS](https://sass-lang.com/)
 
 ## Setup
 
@@ -24,5 +24,8 @@ $ npm run serve
 $ npm run build
 ```
 
+## Sources
+- Icons from [Flaticon](https://www.flaticon.com/)
+
 ## License
-- MIT © [Weronika Kędziora ](https://github.com/Hobbytowo)
+- MIT © [Weronika Kędziora](https://github.com/Hobbytowo)
