@@ -1,24 +1,30 @@
 <template>
   <div class="container">
 
-    <h1 class="title">Spider Solitaire</h1>
+    <img class="img img--left" src="/images/spider.svg" alt="spider icon">
+    <img class="img img--right" src="/images/spider.svg" alt="spider icon">
+
+    <header class="header">
+      <h1 class="header__title">Spider Solitaire</h1>
+    </header>
 
     <section class="menu">
-      <button @click="addCards" class="menu__item menu--button" type="button">
+      <button @click="addCards" class="menu__item  item item--button" type="button">
         Add cards ({{ cards.length / stacks.length }})
       </button>
 
-      <div class="menu__item menu--score">
-        Full colors: {{ fullColor }} / {{ nrOfFoundation }}
+      <div class="menu__item item item--score">
+        Collected full colors: {{ fullColor }} / {{ nrOfFoundation }}
       </div>
 
-      <div class="menu__item menu--level level">
+      <div class="menu__item item item--level level">
         <label class="menu__label">Number of colors</label>
         <select class="menu__select" v-model="levelSelected">
           <option
           v-for="nr in levelOptions"
           :value="nr"
           class="menu__option"
+          :key="nr"
           @click="clearData(); createCards()">
             {{ nr }}
           </option>
@@ -34,7 +40,7 @@
         @onCardSelect="onCardSelect"
       />
     </div>
-    
+
     <modalWin-component
       v-if="showModalWin"
       @close="showModalWin = false"
@@ -68,7 +74,8 @@ export default {
       fullColor: 0,
       nrOfFoundation: 8,
       nrOfCardsInColor: 13,
-      showModalWin: false
+      showModalWin: false,
+      showModalRules: false
     }
   },
   created () {
@@ -324,11 +331,25 @@ export default {
     box-sizing: border-box;
     text-align: center;
     user-select: none;
+    font-family: 'Raleway', sans-serif;
   }
 
-  .title{
-    font-size: 30px;
-    padding: 20px;
+  .container{
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .header{
+    display: flex;
+    align-items: center;
+    margin: 0 auto 25px auto;
+    padding: 10px;
+
+    &__title{
+      flex: 1;
+      font-size: 40px;
+      color: #222;
+    }
   }
 
   .stacks {
@@ -341,17 +362,20 @@ export default {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 60px;
+    margin-bottom: 70px;
 
-    &__item{
-      background-color: #b70000;
-      border-radius: 5px;
-      color: white;
-      padding: 10px;
+    &__select{
+      margin-left: 5px;
     }
+  }
 
+  .item{
+    background-color: #b70000;
+    border-radius: 5px;
+    color: white;
+    padding: 20px;
+    font-size: 15px;
     &--button {
-      width: 150px;
       border: none;
       cursor: pointer;
       transition: all 0.2s;
@@ -359,11 +383,8 @@ export default {
         background-color: #444;
       }
     }
-
-    &__select{
-      margin-left: 5px;
-    }
   }
+
 
   .addCardsValidation::before{
     content: 'Before add new cards, every stack has to be filled';
@@ -373,5 +394,26 @@ export default {
     left: 40%;
   }
 
+
+  .img{
+    position: absolute;
+    z-index: -1;
+    top: 0;
+
+    &--left{
+      left: -10vw;
+      width: 70vw;
+    }
+
+    &--center{
+      left: 55%;
+      width: 12vw;
+    }
+
+    &--right{
+      right: 2vw;
+      width: 18vw;
+    }
+  }
 
 </style>
