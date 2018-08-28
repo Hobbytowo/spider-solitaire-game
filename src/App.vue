@@ -6,6 +6,8 @@
 
     <header class="header">
       <h1 class="header__title">Spider Solitaire</h1>
+      <button class="header__button" @click="showModalRules = true">?</button>
+      <modalRules-component v-if="showModalRules" @close="showModalRules = false"/>
     </header>
 
     <section class="menu">
@@ -53,6 +55,7 @@
 import _ from 'lodash'
 import cardComponent from '@/components/card'
 import stackComponent from '@/components/stack'
+import modalRulesComponent from '@/components/modalRules'
 import modalWinComponent from '@/components/modalWin'
 import { CLUB, DIAMOND, SPADE, HEART } from '@/cardTypes'
 
@@ -60,7 +63,8 @@ export default {
   components: {
     cardComponent,
     stackComponent,
-    modalWinComponent
+    modalWinComponent,
+    modalRulesComponent
   },
 
   data () {
@@ -349,6 +353,20 @@ export default {
       flex: 1;
       font-size: 40px;
       color: #222;
+    }
+
+    &__button{
+      background-color: #b70000;
+      border-radius: 5px;
+      padding: 10px;
+      width: 40px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      &:hover {
+        background-color: #444;
+      }
     }
   }
 
