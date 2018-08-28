@@ -26,6 +26,8 @@ $ npm run build
 
 ## Sources
 - Icons from [Flaticon](https://www.flaticon.com/)
+- Font from [Google Fonts](https://fonts.google.com/)
+- Game rules from [Bicyclecards](https://www.bicyclecards.com/how-to-play/spider-solitaire/)
 
 ## License
 - MIT © [Weronika Kędziora](https://github.com/Hobbytowo)
