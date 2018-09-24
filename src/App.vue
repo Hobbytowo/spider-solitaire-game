@@ -21,13 +21,12 @@
 
       <div class="menu__item item item--level level">
         <label class="menu__label">Number of colors</label>
-        <select class="menu__select" v-model="levelSelected">
+        <select @change="clearData(); createCards()" class="menu__select" v-model="levelSelected">
           <option
           v-for="nr in levelOptions"
           :value="nr"
           class="menu__option"
-          :key="nr"
-          @click="clearData(); createCards()">
+          :key="nr">
             {{ nr }}
           </option>
         </select>
@@ -137,6 +136,7 @@ export default {
       this.stacks = Array(10).fill().map(() => [])
       this.cards = []
       this.fullColor = 0
+      console.log(this.cards)
     },
 
     deselectCards () {
