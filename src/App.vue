@@ -32,6 +32,10 @@
           </option>
         </select>
       </div>
+
+      <button @click="clearData(); createCards()" class="menu__item  item item--button" type="button">
+        Restart
+      </button>
     </section>
 
     <div class="stacks">
