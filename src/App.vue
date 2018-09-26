@@ -136,7 +136,6 @@ export default {
       this.stacks = Array(10).fill().map(() => [])
       this.cards = []
       this.fullColor = 0
-      console.log(this.cards)
     },
 
     deselectCards () {
@@ -384,10 +383,15 @@ export default {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
 
     &__select{
       margin-left: 5px;
+    }
+
+    &__option{
+      padding: 3px;
+      border-radius: 2px;
     }
   }
 
@@ -395,8 +399,12 @@ export default {
     background-color: #b70000;
     border-radius: 5px;
     color: white;
-    padding: 20px;
+    height: 40px;
+    padding: 0 15px;
+    text-align: center;
     font-size: 15px;
+    display: flex;
+    align-items: center;
     &--button {
       border: none;
       cursor: pointer;
@@ -435,6 +443,17 @@ export default {
     &--right{
       right: 2vw;
       width: 18vw;
+    }
+  }
+
+
+  @media (max-width: 690px) {
+    .menu{
+      flex-direction: column;
+    }
+
+    .item{
+      margin: 5px;
     }
   }
 

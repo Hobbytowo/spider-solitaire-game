@@ -76,6 +76,7 @@ export default {
 
     &__container {
       width: 80vw;
+      max-height: 98vh;
       margin: 0px auto;
       padding: 20px 30px;
       background-color: #fff;
@@ -83,6 +84,7 @@ export default {
       box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
       transition: all .3s ease;
       font-family: Helvetica, Arial, sans-serif;
+      overflow-y: auto;
     }
 
     &__header{

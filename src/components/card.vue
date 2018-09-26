@@ -9,7 +9,7 @@
           {{ name }}
           <img v-if="!card.empty" class="symbol symbol--small" :src="`/images/${ color }.svg`">
         </span>
-        <img v-if="!card.empty" class="symbol" :src="`/images/${ color }.svg`">
+        <img v-if="!card.empty" class="symbol symbol--big" :src="`/images/${ color }.svg`">
         <span class="name name--down">
           {{ name }}
           <img v-if="!card.empty" class="symbol symbol--small" :src="`/images/${ color }.svg`">
@@ -101,7 +101,10 @@ export default {
     }
   }
   .symbol {
-    width: 55px;
+    &--big{
+      width: 55px;
+    }
+
     &--small{
       width: 14px;
       position: relative;
@@ -120,4 +123,37 @@ export default {
       transform: rotate(180deg);
     }
   }
+
+  @media (max-width: 1155px) {
+    .flipper {
+      width: 80px;
+      height: 120px;
+      margin: 3px;
+    }
+
+    .card {
+      width: 80px;
+      height: 120px;
+    }
+
+    .flipper-wrap--reversed .flipper {
+      margin: -13px 3px;
+    }
+
+    .symbol--big{
+      width: 35px;
+    }
+  }
+
+  @media (max-width: 889px) {
+    .flipper, .card {
+      width: 60px;
+      height: 90px;
+    }
+    .symbol--big{
+      width: 20px;
+    }
+  }
+
+
 </style>
